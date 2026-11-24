@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- M7 Kitchen Order Board (owner: Fatemeh) - orders of one day, one column per pickup slot -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kitchen board &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/kitchen.css}">
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Kitchen board</h1>
+        <form class="inline-form" th:action="@{/kitchen}" method="get">
+            <input type="date" name="date" class="narrow" th:value="${date}">
+            <button type="submit" class="btn">Show</button>
+        </form>
+    </div>
+
+    <div class="empty" th:if="${board.isEmpty()}">No orders for this day.</div>
+
+    <div class="board">
+        <!-- entry.key = slot label, entry.value = list of BoardCard -->
+        <section class="slot-column" th:each="entry : ${board}">
+            <h2>
+                <span th:text="${entry.key}">12:00 - 12:15</span>
+                <span class="muted small" th:text="${entry.value.size()} + ' orders'">2 orders</span>
+            </h2>
+
+            <article class="order-card" th:each="card : ${entry.value}"
+                     th:classappend="'card-' + ${card.order.status}">
+                <div class="order-card-top">
+                    <strong th:text="'#' + ${card.order.id}">#12</strong>
+                    <span class="code" th:text="${card.order.pickupCode}">K7P3QX</span>
+                    <span class="badge" th:classappend="'status-' + ${card.order.status}"
+                          th:text="${card.order.status}">PLACED</span>
+                </div>
+                <div class="muted small" th:text="${card.order.userName}">Student name</div>
+                <ul class="order-lines">
+                    <li th:each="line : ${card.order.items}"
+                        th:text="${line.quantity} + ' x ' + ${line.itemName}">1 x Chicken biryani</li>
+                </ul>
+                <p class="note" th:if="${card.order.note}" th:text="'Note: ' + ${card.order.note}">Note</p>
+            </article>
+        </section>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
