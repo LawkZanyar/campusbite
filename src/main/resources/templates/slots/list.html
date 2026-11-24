@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- M6 Pickup Slots (owner: Hananeh) - admin list of one day's pickup slots -->
+<!-- M6 Pickup Slots (owner: Hananeh) - admin list of one day's pickup slots + generate form -->
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Pickup slots &middot; CampusBite</title>
@@ -18,6 +18,10 @@
             <button type="submit" class="btn">Show</button>
         </form>
     </div>
+
+    <div class="alert alert-success" th:if="${param.created}"
+         th:text="${param.created[0]} + ' slot(s) created.'">12 slot(s) created.</div>
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
 
     <p class="muted" th:text="'Slots for ' + ${#temporals.format(date, 'EEEE d MMMM yyyy')}">Slots for ...</p>
 
@@ -47,6 +51,23 @@
             </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- generate form: POST /admin/slots, bound to a SlotForm -->
+    <div class="panel" style="margin-top:24px">
+        <h2>Generate slots</h2>
+        <p class="muted small">Creates 15-minute slots between the two times. Times that already have a slot are skipped.</p>
+        <form th:action="@{/admin/slots}" th:object="${form}" method="post" class="inline-form" novalidate>
+            <label class="inline">Date <input type="date" th:field="*{date}" class="narrow"></label>
+            <label class="inline">From <input type="time" th:field="*{from}" class="narrow"></label>
+            <label class="inline">To <input type="time" th:field="*{to}" class="narrow"></label>
+            <label class="inline">Capacity <input type="number" th:field="*{capacity}" min="1" max="100" class="narrow"></label>
+            <button type="submit" class="btn btn-primary">Generate</button>
+        </form>
+        <!-- all field errors of the form in one list -->
+        <ul class="error" th:if="${#fields.hasErrors('${form.*}')}">
+            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}">error</li>
+        </ul>
     </div>
 </main>
 
