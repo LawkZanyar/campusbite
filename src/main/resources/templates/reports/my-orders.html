@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!-- M8 Order History & Reports (owner: Fatemeh) - the student's orders -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My orders &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/kitchen.css}">
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <h1>My orders</h1>
+
+    <div class="empty" th:if="${orders.isEmpty()}">
+        You have no orders yet. <a th:href="@{/menu}">Browse the menu</a>
+    </div>
+
+    <div class="table-wrap" th:unless="${orders.isEmpty()}">
+        <table>
+            <thead>
+            <tr><th>#</th><th>Pickup</th><th>Items</th><th class="right">Total</th><th>Status</th><th>Code</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="o : ${orders}">
+                <td th:text="${o.id}">12</td>
+                <td th:text="${#temporals.format(o.slotStart, 'EEE d MMM')} + ', ' + ${o.slotLabel}">Mon 16 Nov, 12:00 - 12:15</td>
+                <td th:text="${o.itemCount}">3</td>
+                <td class="right" th:text="${o.totalLabel}">7,500 IQD</td>
+                <td><span class="badge" th:classappend="'status-' + ${o.status}" th:text="${o.status}">PLACED</span></td>
+                <td><span class="code" th:text="${o.pickupCode}">K7P3QX</span></td>
+                <td><a class="btn btn-small" th:href="@{/orders/{id}(id=${o.id})}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>

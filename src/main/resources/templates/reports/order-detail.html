@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!-- M8 Order History & Reports (owner: Fatemeh) - one order with pickup code, items and timeline -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/kitchen.css}">
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <p th:if="${isOwner}"><a th:href="@{/orders}">&larr; My orders</a></p>
+
+    <div class="alert alert-success" th:if="${param.placed}">Thank you! Your order is placed. Show this code at the counter.</div>
+    <div class="alert alert-success" th:if="${param.cancelled}">Your order was cancelled.</div>
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
+
+    <div class="page-header">
+        <h1 th:text="'Order #' + ${order.id}">Order #12</h1>
+        <span class="badge" th:classappend="'status-' + ${order.status}" th:text="${order.status}">PLACED</span>
+    </div>
+
+    <div class="panel" style="text-align:center">
+        <div class="muted">Pickup code</div>
+        <div class="pickup-code" th:text="${order.pickupCode}">K7P3QX</div>
+        <div th:text="'Pick up ' + ${#temporals.format(order.slotStart, 'EEEE d MMMM')} + ', ' + ${order.slotLabel}">Pick up ...</div>
+    </div>
+
+    <div class="panel">
+        <h2>Items</h2>
+        <table>
+            <tr th:each="line : ${order.items}">
+                <td th:text="${line.quantity} + ' x ' + ${line.itemName}">1 x Chicken biryani</td>
+                <td class="right" th:text="${line.lineTotalLabel}">5,000 IQD</td>
+            </tr>
+            <tr><th>Total</th><th class="right" th:text="${order.totalLabel}">5,000 IQD</th></tr>
+        </table>
+        <p class="note" th:if="${order.note}" th:text="'Note: ' + ${order.note}">Note</p>
+    </div>
+
+    <div class="panel">
+        <h2>Timeline</h2>
+        <div class="muted" th:if="${timeline.isEmpty()}">No status changes recorded.</div>
+        <ul class="timeline">
+            <li th:each="h : ${timeline}">
+                <span th:text="${#temporals.format(h.changedAt, 'd MMM HH:mm')}">12:03</span>
+                &rarr; <span class="badge" th:classappend="'status-' + ${h.toStatus}" th:text="${h.toStatus}">PREPARING</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- cancel: only the owner, only while PLACED; confirm() asks first -->
+    <form th:if="${isOwner and order.status.name() == 'PLACED'}"
+          th:action="@{/orders/{id}/cancel(id=${order.id})}" method="post"
+          onsubmit="return confirm('Cancel this order?');">
+        <button type="submit" class="btn btn-danger">Cancel order</button>
+    </form>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
