@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- M1 Authentication & Accounts (owner: Lawk) - register page -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="panel form">
+        <h1>Create your account</h1>
+        <p class="muted">Student accounts only. Kitchen and admin accounts are created by an admin.</p>
+
+        <!-- business-rule error from AuthService, e.g. "email already exists" -->
+        <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
+
+        <!-- th:object binds the form to the "form" model attribute (a RegisterForm) -->
+        <form th:action="@{/register}" th:object="${form}" method="post" novalidate>
+            <div class="form-row">
+                <label for="fullName">Full name</label>
+                <input type="text" id="fullName" th:field="*{fullName}" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Name error</div>
+            </div>
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input type="email" id="email" th:field="*{email}" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+            </div>
+            <div class="form-row">
+                <label for="password">Password</label>
+                <input type="password" id="password" th:field="*{password}" th:errorclass="field-error">
+                <div class="muted small">At least 8 characters, including a digit.</div>
+                <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+            </div>
+            <div class="form-row">
+                <label for="confirmPassword">Confirm password</label>
+                <input type="password" id="confirmPassword" th:field="*{confirmPassword}" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Confirm error</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create account</button>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
