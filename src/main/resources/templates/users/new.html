@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- M2 User & Role Administration (owner: Lawk) - create a staff account -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New staff account &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="panel form">
+        <h1>New staff account</h1>
+        <p class="muted">The new user logs in with the temporary password and changes it on their profile.</p>
+
+        <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
+
+        <form th:action="@{/admin/users/new}" th:object="${form}" method="post" novalidate>
+            <div class="form-row">
+                <label for="fullName">Full name</label>
+                <input type="text" id="fullName" th:field="*{fullName}" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">error</div>
+            </div>
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input type="email" id="email" th:field="*{email}" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">error</div>
+            </div>
+            <div class="form-row">
+                <label for="role">Role</label>
+                <!-- th:field on a select marks the option that matches the form value -->
+                <select id="role" th:field="*{role}" th:errorclass="field-error">
+                    <option value="">-- choose --</option>
+                    <option th:each="r : ${roles}" th:value="${r}" th:text="${r}">KITCHEN</option>
+                </select>
+                <div class="error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">error</div>
+            </div>
+            <div class="form-row">
+                <label for="temporaryPassword">Temporary password</label>
+                <input type="text" id="temporaryPassword" th:field="*{temporaryPassword}" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('temporaryPassword')}" th:errors="*{temporaryPassword}">error</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create account</button>
+            <a class="btn-link" th:href="@{/admin/users}">Cancel</a>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>

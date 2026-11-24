@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- M2 User & Role Administration (owner: Lawk) - user list with search -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Users</h1>
+        <a class="btn btn-primary" th:href="@{/admin/users/new}">New staff account</a>
+    </div>
+
+    <div class="alert alert-success" th:if="${param.created}">Staff account created.</div>
+
+    <!-- GET form: the search text travels in the URL as ?q=... -->
+    <form class="inline-form" th:action="@{/admin/users}" method="get" style="margin-bottom:16px">
+        <input type="search" name="q" th:value="${q}" placeholder="Search name or email" class="narrow">
+        <button type="submit" class="btn">Search</button>
+        <a class="btn-link" th:href="@{/admin/users}" th:if="${q}">Clear</a>
+    </form>
+
+    <div class="empty" th:if="${users.isEmpty()}">No users found.</div>
+
+    <div class="table-wrap" th:unless="${users.isEmpty()}">
+        <table>
+            <thead>
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Active</th><th>Created</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${users}">
+                <td th:text="${u.fullName}">Name</td>
+                <td th:text="${u.email}">email</td>
+                <td><span class="badge" th:text="${u.role}">STUDENT</span></td>
+                <td th:text="${u.active} ? 'Yes' : 'No'">Yes</td>
+                <td th:text="${#temporals.format(u.createdAt, 'd MMM yyyy')}">date</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
