@@ -1,0 +1,16 @@
+# SHARED FILE (owner: Lawk)
+# Maven build output
+target/
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+bin/
+# OS files
+.DS_Store
+Thumbs.db
+# Uploaded images (Week 12) are runtime data, not code
+uploads/

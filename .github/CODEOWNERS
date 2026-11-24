@@ -1,0 +1,52 @@
+# SHARED FILE (owner: Lawk)
+# Replace the four placeholders with the real GitHub usernames before committing:
+#   LAWK_GH, PASHA_GH, HANANEH_GH, FATEMEH_GH
+# GitHub asks the owner of a path to review every pull request that touches it.
+
+# Shared files: any member can approve
+*                                          @LAWK_GH @PASHA_GH @HANANEH_GH @FATEMEH_GH
+
+# Lawk: M1 Authentication & Accounts, M2 User & Role Administration
+/src/main/java/com/campusbite/auth/        @LAWK_GH
+/src/main/java/com/campusbite/users/       @LAWK_GH
+/src/main/resources/templates/auth/        @LAWK_GH
+/src/main/resources/templates/users/       @LAWK_GH
+/src/test/java/com/campusbite/auth/        @LAWK_GH
+/src/test/java/com/campusbite/users/       @LAWK_GH
+/db/01_*                                   @LAWK_GH
+/db/seed/01_*                              @LAWK_GH
+
+# Pasha: M3 Menu Catalogue, M4 Menu & Stock Management
+/src/main/java/com/campusbite/menu/        @PASHA_GH
+/src/main/java/com/campusbite/menuadmin/   @PASHA_GH
+/src/main/resources/templates/menu/        @PASHA_GH
+/src/main/resources/templates/menuadmin/   @PASHA_GH
+/src/main/resources/static/css/menu.css    @PASHA_GH
+/src/test/java/com/campusbite/menu/        @PASHA_GH
+/src/test/java/com/campusbite/menuadmin/   @PASHA_GH
+/db/02_*                                   @PASHA_GH
+/db/06_*                                   @PASHA_GH
+/db/seed/02_*                              @PASHA_GH
+
+# Hananeh: M5 Cart & Checkout, M6 Pickup Slots
+/src/main/java/com/campusbite/checkout/    @HANANEH_GH
+/src/main/java/com/campusbite/slots/       @HANANEH_GH
+/src/main/resources/templates/checkout/    @HANANEH_GH
+/src/main/resources/templates/slots/       @HANANEH_GH
+/src/test/java/com/campusbite/checkout/    @HANANEH_GH
+/src/test/java/com/campusbite/slots/       @HANANEH_GH
+/db/03_*                                   @HANANEH_GH
+/db/04_*                                   @HANANEH_GH
+/db/seed/03_*                              @HANANEH_GH
+
+# Fatemeh: M7 Kitchen Order Board, M8 Order History & Reports
+/src/main/java/com/campusbite/kitchen/     @FATEMEH_GH
+/src/main/java/com/campusbite/reports/     @FATEMEH_GH
+/src/main/resources/templates/kitchen/     @FATEMEH_GH
+/src/main/resources/templates/reports/     @FATEMEH_GH
+/src/main/resources/static/css/kitchen.css @FATEMEH_GH
+/src/main/resources/static/js/kitchen.js   @FATEMEH_GH
+/src/test/java/com/campusbite/kitchen/     @FATEMEH_GH
+/src/test/java/com/campusbite/reports/     @FATEMEH_GH
+/db/05_*                                   @FATEMEH_GH
+/db/seed/04_*                              @FATEMEH_GH
