@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- M4 Menu & Stock Management (owner: Pasha) - today's stock for the kitchen -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Today's stock &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Today's stock</h1>
+        <form th:action="@{/kitchen/stock/reset}" method="post"
+              onsubmit="return confirm('Set every item back to its daily stock?');">
+            <button type="submit" class="btn">Start a new day (reset)</button>
+        </form>
+    </div>
+
+    <div class="alert alert-success" th:if="${param.saved}">Stock saved.</div>
+    <div class="alert alert-success" th:if="${param.reset}">Stock reset to the daily amounts.</div>
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
+
+    <p class="muted">Leave "Left today" empty for unlimited. Tick "Sold out" to stop orders for an item.</p>
+
+    <!-- one form for all rows; each input name contains the item id, e.g. left_3 -->
+    <form th:action="@{/kitchen/stock}" method="post">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr><th>Item</th><th>Category</th><th>Daily stock</th><th>Left today</th><th>Sold out</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${items}" th:classappend="${item.soldOut} ? 'muted'">
+                    <td th:text="${item.name}">Name</td>
+                    <td th:text="${item.categoryName}">Category</td>
+                    <td th:text="${item.dailyStock != null} ? ${item.dailyStock} : 'unlimited'">30</td>
+                    <td>
+                        <input type="number" min="0" max="1000" class="stock-input"
+                               th:name="'left_' + ${item.id}" th:value="${item.stockLeft}">
+                    </td>
+                    <td>
+                        <input type="checkbox" th:name="'soldOut_' + ${item.id}"
+                               th:checked="${item.stockLeft != null and item.stockLeft == 0}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p><button type="submit" class="btn btn-primary">Save stock</button></p>
+    </form>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
