@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- M6 Pickup Slots (owner: Hananeh) - admin list of one day's pickup slots -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pickup slots &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Pickup slots</h1>
+        <!-- GET form: choosing a date reloads the page with ?date=yyyy-MM-dd -->
+        <form class="inline-form" th:action="@{/admin/slots}" method="get">
+            <label for="date" class="inline">Date</label>
+            <input type="date" id="date" name="date" class="narrow" th:value="${date}">
+            <button type="submit" class="btn">Show</button>
+        </form>
+    </div>
+
+    <p class="muted" th:text="'Slots for ' + ${#temporals.format(date, 'EEEE d MMMM yyyy')}">Slots for ...</p>
+
+    <div class="empty" th:if="${slots.isEmpty()}">No slots for this date yet.</div>
+
+    <div class="table-wrap" th:unless="${slots.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>Time</th>
+                <th>Capacity</th>
+                <th>Used</th>
+                <th>Remaining</th>
+                <th>State</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="slot : ${slots}">
+                <td th:text="${slot.label}">12:00 - 12:15</td>
+                <td th:text="${slot.capacity}">20</td>
+                <td th:text="${slot.used}">3</td>
+                <td th:text="${slot.remaining}">17</td>
+                <td>
+                    <span class="badge badge-full" th:if="${slot.full}">Full</span>
+                    <span class="badge badge-ok" th:unless="${slot.full}">Available</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
