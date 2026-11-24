@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+  SHARED FILE (owner: Lawk) - layout fragments used by every page.
+  A page includes a fragment with th:replace="~{layout/main :: name}".
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CampusBite layout</title>
+</head>
+<body>
+
+<!-- 1. "head": meta tags + the shared stylesheet. Each page writes its own <title>. -->
+<th:block th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</th:block>
+
+<!-- 2. "nav": the top bar with the logo and one link per page. -->
+<header th:fragment="nav" class="site-header">
+    <nav class="nav container">
+        <a class="logo" th:href="@{/}">Campus<span>Bite</span></a>
+        <ul class="nav-links">
+            <li><a th:href="@{/menu}">Menu</a></li>
+            <li><a th:href="@{/kitchen}">Kitchen</a></li>
+            <li><a th:href="@{/admin/slots}">Admin: Slots</a></li>
+            <li><a th:href="@{/register}">Register</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- 3. "footer": same small footer on every page. -->
+<footer th:fragment="footer" class="site-footer">
+    <div class="container">CampusBite &middot; SECJ 3303 Internet Programming group project</div>
+</footer>
+
+</body>
+</html>

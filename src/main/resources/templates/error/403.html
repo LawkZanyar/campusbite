@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- SHARED FILE (owner: Lawk) - shown when a logged-in user opens a page their role may not use -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Not allowed &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+<main class="container">
+    <div class="error-page">
+        <h1>403</h1>
+        <h2>You are not allowed to open this page</h2>
+        <p class="muted">Your account does not have the role this page needs.</p>
+        <a class="btn btn-primary" th:href="@{/}">Back to the home page</a>
+    </div>
+</main>
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>

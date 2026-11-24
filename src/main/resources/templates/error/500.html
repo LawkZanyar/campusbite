@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- SHARED FILE (owner: Lawk) - shown when the server hits an unexpected error -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+<main class="container">
+    <div class="error-page">
+        <h1>500</h1>
+        <h2>Something went wrong on our side</h2>
+        <p class="muted">Please try again. If it keeps happening, tell the CampusBite team.</p>
+        <a class="btn btn-primary" th:href="@{/}">Back to the home page</a>
+    </div>
+</main>
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,142 @@
+/* SHARED FILE (owner: Lawk) - base styles for every page. No CSS framework. */
+
+:root {
+    --brand: #d9480f;
+    --brand-dark: #a63a0c;
+    --text: #1f2933;
+    --muted: #6b7280;
+    --bg: #f7f5f2;
+    --card: #ffffff;
+    --border: #e5e1da;
+    --ok: #2f9e44;
+    --warn: #e67700;
+    --danger: #c92a2a;
+    --info: #1971c2;
+    --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--bg);
+}
+
+a { color: var(--brand); }
+h1, h2, h3 { line-height: 1.25; }
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+main.container { padding-top: 24px; padding-bottom: 48px; min-height: 70vh; }
+
+/* ---------- navigation bar ---------- */
+.site-header { background: #fff; border-bottom: 1px solid var(--border); }
+.nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 12px; padding-bottom: 12px; }
+.logo { font-size: 1.4rem; font-weight: 700; color: var(--text); text-decoration: none; margin-right: auto; }
+.logo span { color: var(--brand); }
+.nav-links { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; }
+.nav-links a { display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none; color: var(--text); }
+.nav-links a:hover { background: var(--bg); }
+.nav-links form { margin: 0; }
+.nav-user { color: var(--muted); padding: 6px 4px; }
+
+.site-footer { color: var(--muted); font-size: 0.85rem; padding: 24px 0; border-top: 1px solid var(--border); }
+
+/* ---------- headings and helpers ---------- */
+.page-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.page-header h1 { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+.right { text-align: right; }
+.hero { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px 24px; text-align: center; }
+.empty { background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius); padding: 32px; text-align: center; color: var(--muted); }
+
+/* ---------- cards and grids ---------- */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+
+/* ---------- tables ---------- */
+table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+th { background: #faf8f5; font-weight: 600; font-size: 0.9rem; }
+tr:last-child td { border-bottom: none; }
+.table-wrap { overflow-x: auto; }
+
+/* ---------- forms ---------- */
+.form { max-width: 520px; }
+.form-row { margin-bottom: 14px; }
+label { display: block; font-weight: 600; margin-bottom: 4px; }
+label.inline { display: inline-flex; align-items: center; gap: 6px; font-weight: normal; }
+input[type=text], input[type=email], input[type=password], input[type=number],
+input[type=date], input[type=time], input[type=search], input[type=file], select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+}
+textarea { min-height: 90px; }
+input.narrow, select.narrow { width: auto; min-width: 80px; }
+.inline-form { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; }
+.field-error { border-color: var(--danger) !important; }
+.error { color: var(--danger); font-size: 0.9rem; margin-top: 4px; }
+
+/* ---------- buttons ---------- */
+.btn {
+    display: inline-block;
+    padding: 8px 14px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--text);
+    text-decoration: none;
+    cursor: pointer;
+}
+.btn:hover { border-color: var(--muted); }
+.btn-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-dark); }
+.btn-danger { background: #fff; border-color: var(--danger); color: var(--danger); }
+.btn-small { padding: 4px 10px; font-size: 0.85rem; }
+.btn-link { background: none; border: none; color: var(--brand); padding: 6px 10px; cursor: pointer; font: inherit; }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- messages ---------- */
+.alert { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; border: 1px solid; }
+.alert-success { background: #ebfbee; border-color: #b2f2bb; color: #2b8a3e; }
+.alert-error { background: #fff5f5; border-color: #ffc9c9; color: var(--danger); }
+.alert-info { background: #e7f5ff; border-color: #a5d8ff; color: var(--info); }
+
+/* ---------- badges ---------- */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; background: #eee; color: var(--text); }
+.badge-veg { background: #d3f9d8; color: #2b8a3e; }
+.badge-soldout { background: #ffe3e3; color: var(--danger); }
+.badge-ok { background: #d3f9d8; color: #2b8a3e; }
+.badge-full { background: #ffe3e3; color: var(--danger); }
+
+/* order status colours (used by checkout, kitchen and order history pages) */
+.status-PLACED { background: #e7f5ff; color: var(--info); }
+.status-PREPARING { background: #fff4e6; color: var(--warn); }
+.status-READY { background: #d3f9d8; color: #2b8a3e; }
+.status-COLLECTED { background: #e9ecef; color: #495057; }
+.status-CANCELLED { background: #ffe3e3; color: var(--danger); }
+.status-NO_SHOW { background: #f3d9fa; color: #862e9c; }
+
+/* ---------- error pages ---------- */
+.error-page { text-align: center; padding: 48px 16px; }
+.error-page h1 { font-size: 4rem; margin: 0; color: var(--brand); }
+
+@media (max-width: 600px) {
+    th, td { padding: 8px; }
+    .logo { margin-right: 0; width: 100%; }
+}
