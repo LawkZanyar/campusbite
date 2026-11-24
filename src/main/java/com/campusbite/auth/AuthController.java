@@ -1,5 +1,7 @@
 package com.campusbite.auth;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -13,7 +15,7 @@ import com.campusbite.common.BusinessException;
 
 /**
  * M1 Authentication & Accounts (owner: Lawk).
- * Pages for creating an account. Log in / log out are added in Week 07.
+ * Register, log in and log out.
  */
 @Controller
 public class AuthController {
@@ -50,5 +52,43 @@ public class AuthController {
         }
         // Post/Redirect/Get: a browser refresh will not submit the form twice
         return "redirect:/login?registered";
+    }
+
+    /** GET /login shows the login form (with a success note after registering). */
+    @GetMapping("/login")
+    public String showLoginForm(Model model) {
+        model.addAttribute("form", new LoginForm());
+        return "auth/login";
+    }
+
+    /**
+     * POST /login: check the email and password; on success remember the user in the
+     * session. changeSessionId() gives the session a NEW id at login, so an id an
+     * attacker planted before login becomes useless (session fixation).
+     */
+    @PostMapping("/login")
+    public String login(@Valid @ModelAttribute("form") LoginForm form, BindingResult bindingResult,
+                        HttpServletRequest request, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "auth/login";
+        }
+        SessionUser user;
+        try {
+            user = authService.login(form.getEmail(), form.getPassword());
+        } catch (BusinessException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "auth/login";
+        }
+        HttpSession session = request.getSession();   // make sure a session exists
+        request.changeSessionId();
+        CurrentUser.store(session, user);
+        return "redirect:/";
+    }
+
+    /** POST /logout: throw the whole session away (user, cart, ...) and go to the menu. */
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/menu";
     }
 }

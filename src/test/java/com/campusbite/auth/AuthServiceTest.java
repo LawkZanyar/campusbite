@@ -73,4 +73,44 @@ class AuthServiceTest {
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("do not match");
     }
+
+    @Test
+    void loginWithRightPasswordReturnsSessionUser() {
+        SessionUser user = authService.login(" Kitchen@CampusBite.test ", "Pass123!");
+
+        assertThat(user.getRole()).isEqualTo(Role.KITCHEN);
+        assertThat(user.isStaff()).isTrue();
+        assertThat(user.getFullName()).isEqualTo("Demo Kitchen");
+    }
+
+    @Test
+    void loginWithWrongPasswordOrUnknownEmailGivesSameMessage() {
+        assertThatThrownBy(() -> authService.login("student@campusbite.test", "wrong"))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(AuthService.LOGIN_FAILED);
+        assertThatThrownBy(() -> authService.login("nobody@campusbite.test", "Pass123!"))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(AuthService.LOGIN_FAILED);
+    }
+
+    @Test
+    void loginFailsForDeactivatedUser() {
+        User student = repository.findByEmail("student@campusbite.test").get();
+        student.setActive(false);
+        repository.update(student);
+
+        assertThatThrownBy(() -> authService.login("student@campusbite.test", "Pass123!"))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(AuthService.LOGIN_FAILED);
+    }
+
+    @Test
+    void updateProfileSavesTheNewName() {
+        ProfileForm profile = new ProfileForm();
+        profile.setFullName("  New Name ");
+
+        authService.updateProfile(1L, profile);
+
+        assertThat(authService.getUser(1L).getFullName()).isEqualTo("New Name");
+    }
 }

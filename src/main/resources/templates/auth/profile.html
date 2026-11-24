@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- M1 Authentication & Accounts (owner: Lawk) - my profile -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My profile &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="panel form">
+        <h1>My profile</h1>
+        <div class="alert alert-success" th:if="${param.saved}">Your profile was saved.</div>
+
+        <table class="small">
+            <tr><th>Email</th><td th:text="${account.email}">email</td></tr>
+            <tr><th>Role</th><td th:text="${account.role}">STUDENT</td></tr>
+            <tr><th>Member since</th><td th:text="${#temporals.format(account.createdAt, 'd MMM yyyy')}">date</td></tr>
+        </table>
+
+        <form th:action="@{/profile}" th:object="${form}" method="post" novalidate style="margin-top:16px">
+            <div class="form-row">
+                <label for="fullName">Full name</label>
+                <input type="text" id="fullName" th:field="*{fullName}" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Name error</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
