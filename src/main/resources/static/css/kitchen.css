@@ -8,10 +8,17 @@
 .order-card { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--info); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
 .order-card-top { display: flex; align-items: center; gap: 8px; }
 .order-card-top .badge { margin-left: auto; }
-.order-card .code { font-family: Consolas, monospace; letter-spacing: 1px; background: var(--bg); padding: 1px 6px; border-radius: 4px; }
+.code { font-family: Consolas, monospace; letter-spacing: 1px; background: var(--bg); padding: 1px 6px; border-radius: 4px; }
 .order-lines { margin: 8px 0; padding-left: 18px; }
-.order-card .note { font-size: 0.85rem; background: #fff9db; padding: 4px 8px; border-radius: 4px; margin: 6px 0; }
+.note { font-size: 0.85rem; background: #fff9db; padding: 4px 8px; border-radius: 4px; margin: 6px 0; }
+.card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.card-actions form { margin: 0; }
 
 .card-PREPARING { border-left-color: var(--warn); }
 .card-READY { border-left-color: var(--ok); background: #f4fcf5; }
 .card-COLLECTED, .card-NO_SHOW { opacity: 0.55; border-left-color: #adb5bd; }
+
+/* order detail (student) */
+.pickup-code { font-family: Consolas, monospace; font-size: 2.4rem; letter-spacing: 6px; font-weight: 700; color: var(--brand); }
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline li { padding: 6px 0; border-bottom: 1px dashed var(--border); }

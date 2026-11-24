@@ -11,19 +11,22 @@ import org.springframework.stereotype.Service;
 import com.campusbite.checkout.Order;
 import com.campusbite.checkout.OrderRepository;
 import com.campusbite.checkout.OrderStatus;
+import com.campusbite.common.NotFoundException;
 
 /**
  * M7 Kitchen Order Board (owner: Fatemeh).
- * Builds the kitchen board: the orders of one day grouped by pickup slot.
+ * Builds the kitchen board and lets the kitchen move orders to the next status.
  */
 @Service
 public class KitchenBoardService {
 
     private final OrderRepository orderRepository;
+    private final OrderStatusService orderStatusService;
 
-    /** Spring passes Hananeh's OrderRepository (contract). */
-    public KitchenBoardService(OrderRepository orderRepository) {
+    /** Spring passes Hananeh's OrderRepository (contract) and my OrderStatusService. */
+    public KitchenBoardService(OrderRepository orderRepository, OrderStatusService orderStatusService) {
         this.orderRepository = orderRepository;
+        this.orderStatusService = orderStatusService;
     }
 
     /**
@@ -44,6 +47,30 @@ public class KitchenBoardService {
             board.get(slotLabel).add(new BoardCard(order, kitchenButtons(order.getStatus())));
         }
         return board;
+    }
+
+    /**
+     * A kitchen button was pressed. The kitchen may never cancel: that is the student's
+     * job (and cancelling must give the stock back). Everything else is checked by
+     * OrderStatusService.
+     *
+     * @throws InvalidStatusTransitionException if the move is not allowed
+     */
+    public void updateStatus(Long orderId, OrderStatus next, Long staffUserId) {
+        if (next == OrderStatus.CANCELLED) {
+            throw new InvalidStatusTransitionException("Only the student can cancel an order.");
+        }
+        orderStatusService.changeStatus(orderId, next, staffUserId);
+    }
+
+    /**
+     * One order for the staff detail page.
+     *
+     * @throws NotFoundException if the order does not exist
+     */
+    public Order getOrder(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order " + orderId + " was not found."));
     }
 
     /** The next statuses the KITCHEN may choose. Cancelling is only for the student. */

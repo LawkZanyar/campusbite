@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- M7 Kitchen Order Board (owner: Fatemeh) - one order with its status history (for staff) -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order history &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/kitchen.css}">
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <p><a th:href="@{/kitchen(date=${#temporals.format(order.slotStart, 'yyyy-MM-dd')})}">&larr; Back to the board</a></p>
+
+    <div class="page-header">
+        <h1 th:text="'Order #' + ${order.id}">Order #12</h1>
+        <span class="badge" th:classappend="'status-' + ${order.status}" th:text="${order.status}">PLACED</span>
+    </div>
+
+    <div class="panel">
+        <p>
+            <strong>Student:</strong> <span th:text="${order.userName}">name</span><br>
+            <strong>Pickup:</strong>
+            <span th:text="${#temporals.format(order.slotStart, 'EEE d MMM')} + ', ' + ${order.slotLabel}">time</span><br>
+            <strong>Code:</strong> <span class="code" th:text="${order.pickupCode}">K7P3QX</span><br>
+            <strong>Total:</strong> <span th:text="${order.totalLabel}">7,500 IQD</span>
+        </p>
+        <ul class="order-lines">
+            <li th:each="line : ${order.items}" th:text="${line.quantity} + ' x ' + ${line.itemName}">1 x Item</li>
+        </ul>
+        <p class="note" th:if="${order.note}" th:text="'Note: ' + ${order.note}">Note</p>
+    </div>
+
+    <h2>Status history</h2>
+    <div class="empty" th:if="${history.isEmpty()}">No status changes recorded yet.</div>
+    <div class="table-wrap" th:unless="${history.isEmpty()}">
+        <table>
+            <thead><tr><th>When</th><th>From</th><th>To</th><th>Changed by</th></tr></thead>
+            <tbody>
+            <tr th:each="h : ${history}">
+                <td th:text="${#temporals.format(h.changedAt, 'd MMM HH:mm')}">12:03</td>
+                <td th:text="${h.fromStatus != null} ? ${h.fromStatus} : '-'">PLACED</td>
+                <td><span class="badge" th:classappend="'status-' + ${h.toStatus}" th:text="${h.toStatus}">PREPARING</span></td>
+                <td th:text="${h.changedByName != null} ? ${h.changedByName} : 'User #' + ${h.changedBy}">Demo Kitchen</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>

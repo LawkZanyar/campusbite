@@ -23,14 +23,14 @@ import com.campusbite.common.NotFoundException;
 class OrderStatusServiceTest {
 
     private InMemoryOrderRepository orders;
-    private InMemoryStatusHistoryRepository history;
     private OrderStatusService service;
+    private KitchenBoardService board;
 
     @BeforeEach
     void setUp() {
         orders = new InMemoryOrderRepository();
-        history = new InMemoryStatusHistoryRepository();
-        service = new OrderStatusService(orders, history, Clock.systemDefaultZone());
+        service = new OrderStatusService(orders, new InMemoryStatusHistoryRepository(), Clock.systemDefaultZone());
+        board = new KitchenBoardService(orders, service);
     }
 
     @Test
@@ -72,12 +72,27 @@ class OrderStatusServiceTest {
 
     @Test
     void boardGroupsTodaysOrdersBySlotWithoutCancelButtons() {
-        KitchenBoardService board = new KitchenBoardService(orders);
-
         Map<String, List<BoardCard>> today = board.getBoard(LocalDate.now());
 
         assertThat(today.keySet()).containsExactly("12:00 - 12:15", "12:15 - 12:30", "12:30 - 12:45");
         BoardCard placed = today.get("12:00 - 12:15").get(0);
         assertThat(placed.getNextStatuses()).containsExactly(OrderStatus.PREPARING);
+    }
+
+    @Test
+    void kitchenCannotCancelButCanMoveForward() {
+        assertThatThrownBy(() -> board.updateStatus(1L, OrderStatus.CANCELLED, 2L))
+                .isInstanceOf(InvalidStatusTransitionException.class)
+                .hasMessageContaining("Only the student");
+
+        board.updateStatus(2L, OrderStatus.READY, 2L);
+        assertThat(orders.findById(2L).get().getStatus()).isEqualTo(OrderStatus.READY);
+    }
+
+    @Test
+    void cancelledOrdersAreNotOnTheBoard() {
+        service.changeStatus(1L, OrderStatus.CANCELLED, 1L);
+
+        assertThat(board.getBoard(LocalDate.now()).get("12:00 - 12:15")).hasSize(1);
     }
 }

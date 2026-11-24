@@ -18,6 +18,10 @@
         </form>
     </div>
 
+    <!-- flash messages from the status buttons -->
+    <div class="alert alert-success" th:if="${message}" th:text="${message}">Done</div>
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
+
     <div class="empty" th:if="${board.isEmpty()}">No orders for this day.</div>
 
     <div class="board">
@@ -42,6 +46,17 @@
                         th:text="${line.quantity} + ' x ' + ${line.itemName}">1 x Chicken biryani</li>
                 </ul>
                 <p class="note" th:if="${card.order.note}" th:text="'Note: ' + ${card.order.note}">Note</p>
+
+                <!-- one small POST form per allowed next status -->
+                <div class="card-actions">
+                    <form th:each="next : ${card.nextStatuses}"
+                          th:action="@{/kitchen/orders/{id}/status(id=${card.order.id})}" method="post">
+                        <input type="hidden" name="status" th:value="${next}">
+                        <input type="hidden" name="date" th:value="${date}">
+                        <button type="submit" class="btn btn-small" th:text="${next}">READY</button>
+                    </form>
+                    <a class="btn-link small" th:href="@{/kitchen/orders/{id}(id=${card.order.id})}">History</a>
+                </div>
             </article>
         </section>
     </div>
