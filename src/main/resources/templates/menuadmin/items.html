@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!-- M4 Menu & Stock Management (owner: Pasha) - admin list of all menu items -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Menu items &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Menu items</h1>
+        <a class="btn btn-primary" th:href="@{/admin/items/new}">New item</a>
+    </div>
+
+    <div class="alert alert-success" th:if="${param.created}">Item created.</div>
+    <div class="alert alert-success" th:if="${param.updated}">Item saved.</div>
+    <div class="alert alert-success" th:if="${param.deleted}">Item deleted.</div>
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
+
+    <div class="empty" th:if="${items.isEmpty()}">No menu items yet.</div>
+
+    <div class="table-wrap" th:unless="${items.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th><th>Category</th><th class="right">Price</th><th>Veg</th>
+                <th>Available</th><th>Daily stock</th><th>Left today</th><th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td th:text="${item.name}">Name</td>
+                <td th:text="${item.categoryName}">Category</td>
+                <td class="right" th:text="${item.priceLabel}">5,000 IQD</td>
+                <td th:text="${item.vegetarian} ? 'Yes' : ''">Yes</td>
+                <td th:text="${item.available} ? 'Yes' : 'No'">Yes</td>
+                <td th:text="${item.dailyStock != null} ? ${item.dailyStock} : 'unlimited'">30</td>
+                <td th:text="${item.stockLeft != null} ? ${item.stockLeft} : '-'">12</td>
+                <td>
+                    <a class="btn btn-small" th:href="@{/admin/items/{id}/edit(id=${item.id})}">Edit</a>
+                    <!-- delete is a POST form; confirm() asks before sending it -->
+                    <form th:action="@{/admin/items/{id}/delete(id=${item.id})}" method="post" class="inline-form"
+                          onsubmit="return confirm('Delete this item?');">
+                        <button type="submit" class="btn btn-small btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>

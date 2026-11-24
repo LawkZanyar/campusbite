@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!-- M4 Menu & Stock Management (owner: Pasha) - one form for "new item" and "edit item" -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Menu item &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="panel form">
+        <!-- itemId is null for a new item -->
+        <h1 th:text="${itemId == null} ? 'New menu item' : 'Edit menu item'">Menu item</h1>
+
+        <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
+
+        <form th:action="${itemId == null} ? @{/admin/items/new} : @{/admin/items/{id}/edit(id=${itemId})}"
+              th:object="${form}" method="post" novalidate>
+            <div class="form-row">
+                <label for="name">Name</label>
+                <input type="text" id="name" th:field="*{name}" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">error</div>
+            </div>
+            <div class="form-row">
+                <label for="description">Description</label>
+                <textarea id="description" th:field="*{description}" th:errorclass="field-error"></textarea>
+                <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">error</div>
+            </div>
+            <div class="form-row">
+                <label for="categoryId">Category</label>
+                <select id="categoryId" th:field="*{categoryId}" th:errorclass="field-error">
+                    <option value="">-- choose --</option>
+                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}">Drinks</option>
+                </select>
+                <div class="error" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">error</div>
+            </div>
+            <div class="form-row">
+                <label for="priceIqd">Price (IQD)</label>
+                <input type="number" id="priceIqd" th:field="*{priceIqd}" min="250" step="250" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('priceIqd')}" th:errors="*{priceIqd}">error</div>
+            </div>
+            <div class="form-row">
+                <label for="dailyStock">Daily stock (empty = unlimited)</label>
+                <input type="number" id="dailyStock" th:field="*{dailyStock}" min="0" th:errorclass="field-error">
+                <div class="error" th:if="${#fields.hasErrors('dailyStock')}" th:errors="*{dailyStock}">error</div>
+            </div>
+            <div class="form-row">
+                <label class="inline"><input type="checkbox" th:field="*{vegetarian}"> Vegetarian</label>
+                <label class="inline"><input type="checkbox" th:field="*{available}"> Available on the menu</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a class="btn-link" th:href="@{/admin/items}">Cancel</a>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
