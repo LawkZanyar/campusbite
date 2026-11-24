@@ -16,15 +16,47 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </th:block>
 
-<!-- 2. "nav": the top bar with the logo and one link per page. -->
+<!--
+  2. "nav": the top bar. ${session.user} is the SessionUser stored at login
+  (null when nobody is logged in). Each role only sees the links it needs.
+-->
 <header th:fragment="nav" class="site-header">
     <nav class="nav container">
         <a class="logo" th:href="@{/}">Campus<span>Bite</span></a>
         <ul class="nav-links">
             <li><a th:href="@{/menu}">Menu</a></li>
-            <li><a th:href="@{/kitchen}">Kitchen</a></li>
-            <li><a th:href="@{/admin/slots}">Admin: Slots</a></li>
-            <li><a th:href="@{/register}">Register</a></li>
+
+            <th:block th:if="${session.user != null and session.user.student}">
+                <!-- cartCount is added to every page by Hananeh's CartCountAdvice -->
+                <li><a th:href="@{/cart}" th:text="'Cart (' + ${cartCount ?: 0} + ')'">Cart (0)</a></li>
+                <li><a th:href="@{/orders}">My orders</a></li>
+            </th:block>
+
+            <th:block th:if="${session.user != null and session.user.staff}">
+                <li><a th:href="@{/kitchen}">Kitchen</a></li>
+                <li><a th:href="@{/kitchen/stock}">Stock</a></li>
+            </th:block>
+
+            <th:block th:if="${session.user != null and session.user.admin}">
+                <li><a th:href="@{/admin/items}">Admin: Menu</a></li>
+                <li><a th:href="@{/admin/slots}">Admin: Slots</a></li>
+                <li><a th:href="@{/admin/users}">Admin: Users</a></li>
+            </th:block>
+
+            <th:block th:if="${session.user == null}">
+                <li><a th:href="@{/login}">Log in</a></li>
+                <li><a th:href="@{/register}">Register</a></li>
+            </th:block>
+
+            <th:block th:if="${session.user != null}">
+                <li><a th:href="@{/profile}" th:text="'Hi, ' + ${session.user.fullName}">Hi, name</a></li>
+                <!-- log out changes data (the session), so it is a POST form, not a link -->
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn-link">Log out</button>
+                    </form>
+                </li>
+            </th:block>
         </ul>
     </nav>
 </header>
