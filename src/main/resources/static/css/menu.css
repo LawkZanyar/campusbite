@@ -1,0 +1,47 @@
+/* M3/M4 (owner: Pasha) - styles used only by the menu pages */
+
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.tabs a {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--text);
+    text-decoration: none;
+}
+.tabs a.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+.filter-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 20px; }
+
+.menu-section h2 { margin: 28px 0 12px; }
+
+.menu-card { display: flex; flex-direction: column; }
+.menu-card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.menu-card h3 a { color: var(--text); text-decoration: none; }
+.menu-card h3 a:hover { color: var(--brand); }
+.menu-card p { flex: 1; margin: 0 0 12px; }
+.menu-card-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.menu-card.is-soldout { opacity: 0.6; }
+
+/* item detail page */
+.item-detail { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+.item-image img { width: 100%; border-radius: var(--radius); object-fit: cover; max-height: 320px; }
+.image-placeholder {
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    background: #efe7dc;
+    color: var(--muted);
+}
+.item-detail h1 { margin: 0 0 8px; }
+.price { font-size: 1.3rem; margin-right: 8px; }
+
+/* admin item table */
+.thumb { width: 48px; height: 36px; object-fit: cover; border-radius: 4px; }
+.stock-input { width: 90px; }
+
+@media (max-width: 700px) {
+    .item-detail { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- M3 Menu Catalogue (owner: Pasha) - the menu page -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Menu &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Today's menu</h1>
+    </div>
+
+    <!-- category tabs: "All" + one link per category; the selected one gets class "active" -->
+    <div class="tabs">
+        <a th:href="@{/menu(veg=${veg})}" th:classappend="${selectedCategory == null} ? 'active'">All</a>
+        <a th:each="c : ${categories}"
+           th:href="@{/menu(category=${c.id}, veg=${veg})}"
+           th:classappend="${c.id == selectedCategory} ? 'active'"
+           th:text="${c.name}">Category</a>
+    </div>
+
+    <!-- GET form: ticking the box reloads the page with ?veg=true -->
+    <form class="filter-bar" th:action="@{/menu}" method="get">
+        <input type="hidden" name="category" th:if="${selectedCategory != null}" th:value="${selectedCategory}">
+        <label class="inline">
+            <input type="checkbox" name="veg" value="true" th:checked="${veg}" onchange="this.form.submit()">
+            Vegetarian only
+        </label>
+    </form>
+
+    <div class="empty" th:if="${menu.isEmpty()}">No items match your filters.</div>
+
+    <!-- one section per category; entry.key = Category, entry.value = List<MenuItem> -->
+    <section th:each="entry : ${menu}" class="menu-section">
+        <h2 th:text="${entry.key.name}">Category name</h2>
+        <div class="grid">
+            <article class="card menu-card" th:each="item : ${entry.value}"
+                     th:classappend="${item.soldOut} ? 'is-soldout'">
+                <h3><a th:href="@{/menu/items/{id}(id=${item.id})}" th:text="${item.name}">Item name</a></h3>
+                <p class="muted small" th:text="${item.description}">Description</p>
+                <div class="menu-card-footer">
+                    <strong th:text="${item.priceLabel}">5,000 IQD</strong>
+                    <span>
+                        <span class="badge badge-veg" th:if="${item.vegetarian}">Veg</span>
+                        <span class="badge badge-soldout" th:if="${item.soldOut}">Sold out</span>
+                    </span>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>

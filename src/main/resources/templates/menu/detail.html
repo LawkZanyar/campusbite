@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- M3 Menu Catalogue (owner: Pasha) - one menu item -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${item.name} + ' - CampusBite'">Item - CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <p><a th:href="@{/menu}">&larr; Back to the menu</a></p>
+
+    <!-- flash messages set by Hananeh's CartController after "Add to cart" -->
+    <div class="alert alert-success" th:if="${cartMessage}" th:text="${cartMessage}">Added</div>
+    <div class="alert alert-error" th:if="${cartError}" th:text="${cartError}">Error</div>
+
+    <div class="item-detail">
+        <div class="item-image">
+            <img th:if="${item.imageUrl}" th:src="@{${item.imageUrl}}" th:alt="${item.name}">
+            <div class="image-placeholder" th:unless="${item.imageUrl}">No photo yet</div>
+        </div>
+
+        <div class="panel">
+            <p class="muted small" th:text="${item.categoryName}">Category</p>
+            <h1 th:text="${item.name}">Item name</h1>
+            <p th:text="${item.description}">Description</p>
+            <p>
+                <strong class="price" th:text="${item.priceLabel}">5,000 IQD</strong>
+                <span class="badge badge-veg" th:if="${item.vegetarian}">Vegetarian</span>
+                <span class="badge badge-soldout" th:if="${item.soldOut}">Sold out</span>
+                <span class="muted small" th:if="${!item.soldOut and item.stockLeft != null}"
+                      th:text="${item.stockLeft} + ' left today'">12 left today</span>
+            </p>
+
+            <!-- Add to cart: only for visitors and students (staff don't order). -->
+            <form th:if="${session.user == null or session.user.student}"
+                  th:action="@{/cart/add}" method="post" class="inline-form">
+                <input type="hidden" name="itemId" th:value="${item.id}">
+                <label for="quantity" class="inline">Quantity</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" max="10"
+                       class="narrow" th:disabled="${item.soldOut}">
+                <button type="submit" class="btn btn-primary" th:disabled="${item.soldOut}">Add to cart</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
