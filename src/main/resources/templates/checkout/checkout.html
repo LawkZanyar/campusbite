@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- M5 Cart & Checkout (owner: Hananeh) - choose a pickup time and place the order -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Checkout &middot; CampusBite</title>
+    <th:block th:replace="~{layout/main :: head}"></th:block>
+</head>
+<body>
+<header th:replace="~{layout/main :: nav}"></header>
+
+<main class="container">
+    <h1>Checkout</h1>
+
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">Error</div>
+
+    <div class="panel">
+        <h2>Your order</h2>
+        <table>
+            <tr th:each="line : ${cart.lines}">
+                <td th:text="${line.quantity} + ' x ' + ${line.name}">1 x Chicken biryani</td>
+                <td class="right" th:text="${line.lineTotalLabel}">5,000 IQD</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <th class="right" th:text="${cart.totalLabel}">5,000 IQD</th>
+            </tr>
+        </table>
+        <p><a th:href="@{/cart}">Change the cart</a></p>
+    </div>
+
+    <form th:action="@{/checkout}" th:object="${form}" method="post" class="panel" novalidate>
+        <h2>Pickup time</h2>
+        <div class="empty" th:if="${slots.isEmpty()}">No pickup times left today or tomorrow. Please try again later.</div>
+
+        <!-- one radio button per bookable slot; th:field checks the one in form.slotId -->
+        <div class="form-row" th:unless="${slots.isEmpty()}">
+            <label class="inline" th:each="slot : ${slots}" style="margin-right:16px">
+                <input type="radio" th:field="*{slotId}" th:value="${slot.id}">
+                <span th:text="${#temporals.format(slot.date, 'EEE d MMM')} + ', ' + ${slot.label}">Mon 16 Nov, 12:00 - 12:15</span>
+                <span class="muted small" th:text="'(' + ${slot.remaining} + ' left)'">(17 left)</span>
+            </label>
+            <div class="error" th:if="${#fields.hasErrors('slotId')}" th:errors="*{slotId}">error</div>
+        </div>
+
+        <div class="form-row">
+            <label for="note">Note for the kitchen (optional)</label>
+            <textarea id="note" th:field="*{note}" maxlength="255" placeholder="e.g. no onions"></textarea>
+            <div class="error" th:if="${#fields.hasErrors('note')}" th:errors="*{note}">error</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" th:disabled="${slots.isEmpty()}">Place order</button>
+    </form>
+</main>
+
+<footer th:replace="~{layout/main :: footer}"></footer>
+</body>
+</html>
